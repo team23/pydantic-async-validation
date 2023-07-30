@@ -6,21 +6,6 @@ from pydantic.errors import PydanticUserError
 from pydantic_async_validation.constants import ASYNC_FIELD_VALIDATOR_CONFIG_KEY, ASYNC_MODEL_VALIDATOR_CONFIG_KEY
 from pydantic_async_validation.utils import make_generic_validator, prepare_validator
 
-
-class Validator:
-    """Helper / data class to store validator information."""
-
-    __slots__ = ('func', 'skip_on_failure')
-
-    def __init__(
-        self,
-        func: Callable,
-        skip_on_failure: bool = False,
-    ) -> None:
-        self.func = func
-        self.skip_on_failure = skip_on_failure
-
-
 if TYPE_CHECKING:
     from inspect import Signature  # noqa
 
@@ -39,7 +24,21 @@ if TYPE_CHECKING:
     ]
 
     ValidatorsList = list[ValidatorCallable]
-    ValidatorListDict = dict[str, list[Validator]]
+    ValidatorListDict = "dict[str, list[Validator]]"
+
+
+class Validator:
+    """Helper / data class to store validator information."""
+
+    __slots__ = ('func', 'skip_on_failure')
+
+    def __init__(
+        self,
+        func: Callable,
+        skip_on_failure: bool = False,
+    ) -> None:
+        self.func = func
+        self.skip_on_failure = skip_on_failure
 
 
 def async_field_validator(
