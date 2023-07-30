@@ -8,9 +8,9 @@ from pydantic_async_validation.validators import async_field_validator, async_mo
 
 
 class AsyncValidationModelTestModel(AsyncValidationModelMixin):
-    id: Union[int, None]
-    title: Union[str, None]
-    slug: Union[str, None]
+    id: Union[int, None] = None
+    title: Union[str, None] = None
+    slug: Union[str, None] = None
 
     @async_field_validator("slug")
     async def _validate_is_slugified_title(cls, value, instance, field):
