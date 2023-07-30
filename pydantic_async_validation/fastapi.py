@@ -57,4 +57,4 @@ class ensure_request_validation_errors():
         if isinstance(exc_value, ValidationError):
             raise RequestValidationError(errors=exc_value.errors())
         if isinstance(exc_value, AsyncValidationError):
-            raise RequestValidationError(errors=exc_value.errors)
+            raise RequestValidationError(errors=exc_value.errors())

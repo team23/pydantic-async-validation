@@ -6,5 +6,8 @@ from pydantic_core import ErrorDetails
 
 class AsyncValidationError(ValueError):
     def __init__(self, errors: List[ErrorDetails], model: Type[pydantic.BaseModel]) -> None:
-        self.errors = errors
-        self.model = model
+        self._errors = errors
+        self._model = model
+
+    def errors(self) -> List[ErrorDetails]:
+        return self._errors
