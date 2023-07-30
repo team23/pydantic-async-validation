@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "pydantic-async-validation"
+version = "0.1.0"
+description = "Add async validation to pydantic"
+authors = ["TEAM23 GmbH <info@team23.de>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "pydantic_async_validation"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pydantic = ">=1.9.0,<3.0.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=7.1.2,<8.0.0"
+isort = "^5.10.1"
+mypy = ">=0.971,<2.0"
+flake8 = ">=5.0.4,<7.0.0"
+flake8-builtins = ">=1.5.3,<3.0.0"
+flake8-annotations = ">=2.9.1,<4.0.0"
+flake8-commas = "^2.1.0"
+flake8-isort = ">=4.2,<7.0"
+flake8-print = "^5.0.0"
+flake8-debugger = "^4.1.2"
+pytest-cov = ">=3,<5"
+tox = ">=3.26,<5.0"
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+line_length = 115
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
