@@ -14,13 +14,13 @@ pre-commit:install() {
 }
 
 task:install() {
-    task:poetry install
+    task:poetry install -E fastapi
 
     pre-commit:install
 }
 
 task:update() {
-    task:poetry install
+    task:poetry install -E fastapi
 }
 
 task:poetry() {
