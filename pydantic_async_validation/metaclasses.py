@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any, List, Optional, Tuple
 
 from pydantic._internal._model_construction import ModelMetaclass  # noqa
 
@@ -21,8 +21,12 @@ class AsyncValidationModelMetaclass(ModelMetaclass):
         namespace: dict[str, Any],
         **kwargs: Any,
     ) -> Any:
-        async_field_validators = []
-        async_model_validators = []
+        async_field_validators: List[Tuple[List[str], Validator]] = []
+        async_model_validators: List[Validator] = []
+
+        async_field_validator_fields: Optional[List[str]]
+        async_field_validator_config: "Optional[Validator]"
+        async_model_validator_config: "Optional[Validator]"
 
         for base in bases:
             async_field_validators += getattr(
@@ -37,23 +41,21 @@ class AsyncValidationModelMetaclass(ModelMetaclass):
             )
 
         for _attr_name, attr_value in namespace.items():
-            async_model_validator_config: "Optional[Validator]"
-
             # Register all validators
-            async_field_validator_fields, async_model_validator_config = getattr(
+            async_field_validator_fields, async_field_validator_config = getattr(
                 attr_value,
                 ASYNC_FIELD_VALIDATOR_CONFIG_KEY,
                 (None, None),
             )
             if (
                 async_field_validator_fields is not None
-                and async_model_validator_config is not None
-                and callable(async_model_validator_config.func)
+                and async_field_validator_config is not None
+                and callable(async_field_validator_config.func)
             ):
                 async_field_validators.append(attr_value)
 
             # Register all root validators
-            async_model_validator_config: "Optional[Validator]" = getattr(
+            async_model_validator_config = getattr(
                 attr_value,
                 ASYNC_MODEL_VALIDATOR_CONFIG_KEY,
                 None,

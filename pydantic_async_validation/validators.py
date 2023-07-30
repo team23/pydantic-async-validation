@@ -1,5 +1,5 @@
 from types import FunctionType
-from typing import TYPE_CHECKING, Any, Callable, Optional, Union
+from typing import TYPE_CHECKING, Any, Callable, Optional, Tuple, Union
 
 from pydantic.errors import PydanticUserError
 
@@ -24,7 +24,6 @@ class Validator:
 if TYPE_CHECKING:
     from inspect import Signature  # noqa
 
-    from pydantic.fields import ModelField  # noqa
     from pydantic.main import BaseConfig  # noqa
     from pydantic.types import ModelOrDc  # noqa
 
@@ -33,7 +32,7 @@ if TYPE_CHECKING:
             Optional[ModelOrDc],
             Any,
             dict[str, Any],
-            ModelField,
+            str,
             type[BaseConfig],
         ],
         Any,
@@ -44,9 +43,9 @@ if TYPE_CHECKING:
 
 
 def async_field_validator(
-    __field: str,
+    __field_name: str,
     /,
-    *additional_fields: str,
+    *additional_field_names: str,
     allow_reuse: bool = False,
 ) -> Callable[[Callable], classmethod]:
     """
@@ -56,7 +55,7 @@ def async_field_validator(
     function to a list of fields.
     """
 
-    if isinstance(__field, FunctionType):
+    if isinstance(__field_name, FunctionType):
         raise PydanticUserError(
             "validators should be used with fields and keyword arguments, "
             "not bare. "
@@ -64,7 +63,7 @@ def async_field_validator(
             code='validator-instance-method',
         )
 
-    fields = __field, *additional_fields
+    field_names: Tuple[str, ...] = __field_name, *additional_field_names
 
     def dec(func: Callable) -> classmethod:
         f_cls = prepare_validator(func, allow_reuse)
@@ -72,7 +71,7 @@ def async_field_validator(
             f_cls,
             ASYNC_FIELD_VALIDATOR_CONFIG_KEY,
             (
-                fields,
+                field_names,
                 Validator(
                     func=make_generic_validator(f_cls.__func__),
                 ),

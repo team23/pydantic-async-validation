@@ -17,7 +17,7 @@ def prepare_validator(function: Callable, allow_reuse: bool = False) -> classmet
     which generally isn't the intended behaviour,
     don't run in ipython (see #312) or if allow_reuse is False.
     """
-    f_cls = (
+    f_cls: classmethod = (
         function
         if isinstance(function, classmethod)
         else classmethod(function)
@@ -25,9 +25,12 @@ def prepare_validator(function: Callable, allow_reuse: bool = False) -> classmet
     if not allow_reuse:
         ref = f_cls.__func__.__module__ + '.' + f_cls.__func__.__qualname__
         if ref in _ASYNC_VALIDATOR_FUNCS:
-            raise pydantic.ConfigError(
+            # TODO: Does this still make sense? pydantic v2 seems to now need this?
+            raise pydantic.PydanticUserError(
                 f'Duplicate validator function "{ref}"; if this is intended, '
                 f'set `allow_reuse=True`',
+                # TODO: Find correct code for this - if we keep this exception
+                code='validator-reuse',  # type: ignore
             )
         _ASYNC_VALIDATOR_FUNCS.add(ref)
     return f_cls

@@ -23,24 +23,25 @@ class AsyncValidationModelMixin(
     pydantic_model_async_model_validators: ClassVar[List[Validator]]
 
     async def model_async_validate(self) -> None:
+        field_names: list[str]
+        validator: Validator
+
         validation_errors = []
         validators = getattr(self, ASYNC_FIELD_VALIDATORS_KEY, [])
         root_validators = getattr(self, ASYNC_MODEL_VALIDATORS_KEY, [])
 
         for validator_attr in validators:
-            fields: list[str]
-            validator: Validator
-            fields, validator = getattr(
+            field_names, validator = getattr(
                 validator_attr,
                 ASYNC_FIELD_VALIDATOR_CONFIG_KEY,
             )
-            for field in fields:
+            for field_name in field_names:
                 try:
                     await validator.func(
                         self.__class__,
-                        getattr(self, field, None),
+                        getattr(self, field_name, None),
                         self,
-                        field,
+                        field_name,
                         validator,
                     )
                 except (ValueError, TypeError, AssertionError) as o_O:
@@ -48,13 +49,13 @@ class AsyncValidationModelMixin(
                         ErrorDetails(
                             type='value_error',
                             msg=str(o_O),
-                            loc=(field,),
-                            input=getattr(self, field, None),
+                            loc=(field_name,),
+                            input=getattr(self, field_name, None),
                         ),
                     )
 
         for validator_attr in root_validators:
-            validator: Validator = getattr(
+            validator = getattr(
                 validator_attr,
                 ASYNC_MODEL_VALIDATOR_CONFIG_KEY,
             )
