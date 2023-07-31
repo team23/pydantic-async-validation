@@ -1,5 +1,5 @@
 from types import FunctionType
-from typing import TYPE_CHECKING, Any, Callable, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Callable, Optional, Tuple
 
 from pydantic.errors import PydanticUserError
 
@@ -27,7 +27,7 @@ if TYPE_CHECKING:
     ValidatorListDict = "dict[str, list[Validator]]"
 
 
-class Validator:
+class ValidationInfo:
     """Helper / data class to store validator information."""
 
     __slots__ = ('func', 'extra')
@@ -48,7 +48,7 @@ def async_field_validator(
     /,
     *additional_field_names: str,
     **extra: Any,
-) -> Callable[[Callable], classmethod]:
+) -> Callable[[Callable], Callable]:
     """
     Decorate methods on a model indicating that they should be used to validate data.
 
@@ -66,13 +66,13 @@ def async_field_validator(
 
     field_names: Tuple[str, ...] = __field_name, *additional_field_names
 
-    def dec(func: Callable) -> classmethod:
+    def dec(func: Callable) -> Callable:
         setattr(
             func,
             ASYNC_FIELD_VALIDATOR_CONFIG_KEY,
             (
                 field_names,
-                Validator(
+                ValidationInfo(
                     func=make_generic_field_validator(func),
                     extra=extra,
                 ),
@@ -85,7 +85,7 @@ def async_field_validator(
 
 def async_model_validator(
     **extra: Any,
-) -> Union[classmethod, Callable[[Callable], classmethod]]:
+) -> Callable[[Callable], Callable]:
     """
     Decorate methods on a model indicating that they should be used to validate data.
 
@@ -93,11 +93,11 @@ def async_model_validator(
     function to the whole model (root validator).
     """
 
-    def dec(func: Callable) -> classmethod:
+    def dec(func: Callable) -> Callable:
         setattr(
             func,
             ASYNC_MODEL_VALIDATOR_CONFIG_KEY,
-            Validator(
+            ValidationInfo(
                 func=make_generic_model_validator(func),
                 extra=extra,
             ),

@@ -1,8 +1,9 @@
 from functools import wraps
 from inspect import Signature, signature
-from typing import Callable
+from typing import Callable, List, Tuple, Union, cast
 
 from pydantic import PydanticUserError
+from pydantic_core import InitErrorDetails
 
 
 def make_generic_field_validator(validator_func: Callable) -> Callable:
@@ -143,3 +144,27 @@ def generic_model_validator_wrapper(
     return lambda self, config: validator_func(
         self, config=config,
     )
+
+
+def prefix_errors(
+    prefix: Tuple[Union[int, str], ...],
+    errors: List[InitErrorDetails],
+) -> List[InitErrorDetails]:
+    """
+    Extend all errors passed as list to include an additional prefix.
+
+    This is used to prefix errors occuring in child classes to include the parents
+    field details in the error locations.
+    """
+
+    return [
+        cast(
+            InitErrorDetails,
+            {
+                **error,
+                'loc': (*prefix, *error['loc']),
+            },
+        )
+        for error
+        in errors
+    ]

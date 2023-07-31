@@ -10,7 +10,7 @@ from pydantic_async_validation.constants import (
 )
 
 if TYPE_CHECKING:
-    from pydantic_async_validation.validators import Validator
+    from pydantic_async_validation.validators import ValidationInfo
 
 
 class AsyncValidationModelMetaclass(ModelMetaclass):
@@ -21,12 +21,12 @@ class AsyncValidationModelMetaclass(ModelMetaclass):
         namespace: dict[str, Any],
         **kwargs: Any,
     ) -> Any:
-        async_field_validators: List[Tuple[List[str], Validator]] = []
-        async_model_validators: List[Validator] = []
+        async_field_validators: List[Tuple[List[str], ValidationInfo]] = []
+        async_model_validators: List[ValidationInfo] = []
 
         async_field_validator_fields: Optional[List[str]]
-        async_field_validator_config: "Optional[Validator]"
-        async_model_validator_config: "Optional[Validator]"
+        async_field_validator_config: "Optional[ValidationInfo]"
+        async_model_validator_config: "Optional[ValidationInfo]"
 
         for base in bases:
             async_field_validators += getattr(
