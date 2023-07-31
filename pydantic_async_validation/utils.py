@@ -121,7 +121,7 @@ def make_generic_model_validator(validator_func: Callable) -> Callable:
     )
 
 
-all_model_validator_kwargs = {'validator'}
+all_model_validator_kwargs = {'config'}
 
 
 def generic_model_validator_wrapper(
