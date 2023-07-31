@@ -1,11 +1,12 @@
-from collections.abc import Callable
-from typing import Any, Type, Union
+from contextlib import contextmanager
+from typing import Generator
 
 from fastapi.exceptions import RequestValidationError
 from pydantic import ValidationError
 
 
-class ensure_request_validation_errors():
+@contextmanager
+def ensure_request_validation_errors() -> Generator[None, None, None]:
     """
     Converter for `ValidationError` to `RequestValidationError`.
 
@@ -18,42 +19,13 @@ class ensure_request_validation_errors():
     Usage examples:
 
     ```python
-    # Use as a decorator
-    @ensure_request_validation_errors
-    def some_func():
-        some_code_doing_extra_validation()  # for example async validation
-    ```
-
-    ```python
     # Use as a context manager
     with ensure_request_validation_errors():
         some_code_doing_extra_validation()  # for example async validation
     ```
     """
 
-    func: Union[Callable, None]
-
-    def __init__(self, func: Union[Callable, None] = None) -> None:
-        self.func = func
-
-    def __call__(self, *args: Any, **kwargs: Any) -> Any:
-        if self.func is None:
-            raise RuntimeError("No func given")
-
-        with self:
-            return self.func(*args, **kwargs)
-
-    def __enter__(self) -> None:
-        pass
-
-    def __exit__(
-        self,
-        exc_type: Union[Type[Exception], None],
-        exc_value: Union[Exception, None],
-        traceback: Any,
-    ) -> None:
-        if exc_value is None:
-            return
-
-        if isinstance(exc_value, ValidationError):
-            raise RequestValidationError(errors=exc_value.errors())
+    try:
+        yield
+    except ValidationError as O_o:
+        raise RequestValidationError(errors=O_o.errors())

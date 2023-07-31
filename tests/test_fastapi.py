@@ -42,12 +42,6 @@ def app():
         with ensure_request_validation_errors():
             await instance.model_async_validate()
 
-    @app.get("/with-request-validation-errors-decorator")
-    @ensure_request_validation_errors
-    async def with_decorator():
-        instance = SomethingModel(name="invalid")
-        await instance.model_async_validate()
-
     return app
 
 
@@ -69,11 +63,4 @@ def test_fastapi_fails_without_handling(app):
 def test_fastapi_triggers_validation_response(app):
     with TestClient(app) as client:
         response = client.get("/with-request-validation-errors")
-        assert response.status_code == 422
-
-
-@pytest.mark.skipif(fastapi is None, reason="fastapi not installed")
-def test_fastapi_triggers_validation_response_by_decorator(app):
-    with TestClient(app) as client:
-        response = client.get("/with-request-validation-errors-decorator")
         assert response.status_code == 422
