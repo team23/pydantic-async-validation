@@ -14,6 +14,8 @@ class SomethingModel(AsyncValidationModelMixin, pydantic.BaseModel):
 
     @async_field_validator('name')
     async def validate_name(self, value: str) -> None:
+        assert value == self.name
+
         if value == "invalid":
             raise ValueError("Invalid name")
 
