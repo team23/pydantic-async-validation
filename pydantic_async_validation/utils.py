@@ -164,7 +164,7 @@ def generic_model_validator_wrapper(
 
 def prefix_errors(
     prefix: Tuple[Union[int, str], ...],
-    errors: List[Union[InitErrorDetails, ErrorDetails]],
+    errors: Union[List[InitErrorDetails], List[ErrorDetails]],
 ) -> List[InitErrorDetails]:
     """
     Extend all errors passed as list to include an additional prefix.
@@ -180,7 +180,14 @@ def prefix_errors(
                 # Original data is ErrorDetails, we need to convert it back to
                 # InitErrorDetails
                 **error,
-                'type': PydanticCustomError(error['type'], error['msg']),
+                'type': (
+                    PydanticCustomError(
+                        error['type'],
+                        cast(ErrorDetails, error)['msg'],
+                    )
+                    if isinstance(error['type'], str)
+                    else error['type']
+                ),
                 'loc': (*prefix, *error['loc']),
             },
         )

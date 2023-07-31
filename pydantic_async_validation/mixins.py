@@ -1,4 +1,4 @@
-from typing import ClassVar, List, Tuple, Union, cast
+from typing import ClassVar, List, Tuple, Union
 
 import pydantic
 from pydantic_core import InitErrorDetails, PydanticCustomError, ValidationError
@@ -91,10 +91,7 @@ class AsyncValidationModelMixin(
                 validation_errors.extend(
                     prefix_errors(
                         prefix,
-                        cast(
-                            List[InitErrorDetails],
-                            O_o.errors(),
-                        ),
+                        O_o.errors(),
                     ),
                 )
 
