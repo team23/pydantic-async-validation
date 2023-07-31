@@ -42,6 +42,9 @@ async def test_all_field_validator_combinations_are_valid():
         @async_model_validator()
         async def validate_name_2(self, config: ValidationInfo) -> None: pass
 
+        @async_model_validator()
+        async def validate_name_3(self, **kwargs) -> None: pass
+
     instance = OtherModel(name="valid")
     await instance.model_async_validate()
 
@@ -54,6 +57,13 @@ async def test_invalid_validators_are_prohibited():
 
             @async_model_validator()
             async def validate_name(self, uses_value_or_anything: Any) -> None: pass
+
+    with pytest.raises(PydanticUserError):
+        class OtherModel2(AsyncValidationModelMixin, pydantic.BaseModel):
+            name: str
+
+            @async_model_validator()
+            async def validate_name(cls) -> None: pass
 
 
 @pytest.mark.asyncio
