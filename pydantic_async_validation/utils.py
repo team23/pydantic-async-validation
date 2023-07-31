@@ -3,7 +3,7 @@ from inspect import Signature, signature
 from typing import Callable, List, Tuple, Union, cast
 
 from pydantic import PydanticUserError
-from pydantic_core import InitErrorDetails
+from pydantic_core import ErrorDetails, InitErrorDetails, PydanticCustomError
 
 
 def make_generic_field_validator(validator_func: Callable) -> Callable:
@@ -19,19 +19,19 @@ def make_generic_field_validator(validator_func: Callable) -> Callable:
             f'Invalid signature for validator {validator_func}: {sig},'
             f'"cls" not permitted as first argument, '
             f'should be: (self, value, field, config), '
-            f'"field" and "config" are all optional.',
+            f'"value", "field" and "config" are all optional.',
             code='validator-signature',
         )
     return wraps(validator_func)(
         generic_field_validator_wrapper(
             validator_func,
             sig,
-            set(args[1:]),
+            set(args),
         ),
     )
 
 
-all_field_validator_kwargs = {'field', 'validator'}
+all_field_validator_kwargs = {'value', 'field', 'config'}
 
 
 def generic_field_validator_wrapper(
@@ -53,30 +53,46 @@ def generic_field_validator_wrapper(
             f'Invalid signature for validator {validator_func}: {sig}, '
             f'should be: '
             f'(self, value, field, config), '
-            f'"field" and "config" are all optional.',
+            f'"value", "field" and "config" are all optional.',
             code='validator-signature',
         )
 
     if has_kwargs:
-        return lambda self, v, field, config: validator_func(
-            self, v, field=field, config=config,
+        return lambda self, value, field, config: validator_func(
+            self, value=value, field=field, config=config,
         )
     if args == set():
-        return lambda self, v, field, config: validator_func(
-            self, v,
+        return lambda self, value, field, config: validator_func(
+            self,
+        )
+    if args == {'value'}:
+        return lambda self, value, field, config: validator_func(
+            self, value=value,
         )
     if args == {'field'}:
-        return lambda self, v, field, config: validator_func(
-            self, v, field=field,
+        return lambda self, value, field, config: validator_func(
+            self, field=field,
+        )
+    if args == {'value', 'field'}:
+        return lambda self, value, field, config: validator_func(
+            self, value=value, field=field,
         )
     if args == {'config'}:
-        return lambda self, v, field, config: validator_func(
-            self, v, config=config,
+        return lambda self, value, field, config: validator_func(
+            self, config=config,
+        )
+    if args == {'value', 'config'}:
+        return lambda self, value, field, config: validator_func(
+            self, value=value, config=config,
+        )
+    if args == {'field', 'config'}:
+        return lambda self, value, field, config: validator_func(
+            self, field=field, config=config,
         )
 
-    # args == {'field', 'validator'}
-    return lambda self, v, field, config: validator_func(
-        self, v, field=field, config=config,
+    # args == {'value', 'field', 'validator'}
+    return lambda self, value, field, config: validator_func(
+        self, value=value, field=field, config=config,
     )
 
 
@@ -100,7 +116,7 @@ def make_generic_model_validator(validator_func: Callable) -> Callable:
         generic_model_validator_wrapper(
             validator_func,
             sig,
-            set(args[1:]),
+            set(args),
         ),
     )
 
@@ -148,7 +164,7 @@ def generic_model_validator_wrapper(
 
 def prefix_errors(
     prefix: Tuple[Union[int, str], ...],
-    errors: List[InitErrorDetails],
+    errors: List[Union[InitErrorDetails, ErrorDetails]],
 ) -> List[InitErrorDetails]:
     """
     Extend all errors passed as list to include an additional prefix.
@@ -161,6 +177,18 @@ def prefix_errors(
         cast(
             InitErrorDetails,
             {
+                # Original data is ErrorDetails, we need to convert it back to
+                # InitErrorDetails
+                **error,
+                'type': PydanticCustomError(error['type'], error['msg']),
+                'loc': (*prefix, *error['loc']),
+            },
+        )
+        if "msg" in error
+        else cast(
+            InitErrorDetails,
+            {
+                # Original data is InitErrorDetails, all fine
                 **error,
                 'loc': (*prefix, *error['loc']),
             },

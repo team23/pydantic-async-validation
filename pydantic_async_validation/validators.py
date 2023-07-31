@@ -6,7 +6,7 @@ from pydantic.errors import PydanticUserError
 from pydantic_async_validation.constants import ASYNC_FIELD_VALIDATOR_CONFIG_KEY, ASYNC_MODEL_VALIDATOR_CONFIG_KEY
 from pydantic_async_validation.utils import make_generic_field_validator, make_generic_model_validator
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from inspect import Signature  # noqa
 
     from pydantic.main import BaseConfig  # noqa
@@ -58,7 +58,7 @@ def async_field_validator(
 
     if isinstance(__field_name, FunctionType):
         raise PydanticUserError(
-            "validators should be used with fields and keyword arguments, "
+            "Validators should be used with fields and keyword arguments, "
             "not bare. "
             "E.g. usage should be `@async_field_validator('<field_name>', ...)`",
             code='validator-instance-method',

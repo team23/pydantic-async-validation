@@ -9,7 +9,7 @@ from pydantic_async_validation.constants import (
     ASYNC_MODEL_VALIDATORS_KEY,
 )
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from pydantic_async_validation.validators import ValidationInfo
 
 

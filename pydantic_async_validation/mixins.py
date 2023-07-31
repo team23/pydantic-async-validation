@@ -51,7 +51,7 @@ class AsyncValidationModelMixin(
                         field_name,
                         field_validator,
                     )
-                except (ValueError, TypeError, AssertionError) as o_O:
+                except (ValueError, AssertionError) as o_O:
                     validation_errors.append(
                         InitErrorDetails(
                             type=PydanticCustomError('value_error', str(o_O)),  # type: ignore
@@ -71,7 +71,7 @@ class AsyncValidationModelMixin(
                     self,
                     model_validator,
                 )
-            except (ValueError, TypeError, AssertionError) as o_O:
+            except (ValueError, AssertionError) as o_O:
                 validation_errors.append(
                     InitErrorDetails(
                         type=PydanticCustomError('value_error', str(o_O)),  # type: ignore
