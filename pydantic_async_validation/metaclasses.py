@@ -41,7 +41,7 @@ class AsyncValidationModelMetaclass(ModelMetaclass):
             )
 
         for _attr_name, attr_value in namespace.items():
-            # Register all validators
+            # Register all field validators
             async_field_validator_fields, async_field_validator_config = getattr(
                 attr_value,
                 ASYNC_FIELD_VALIDATOR_CONFIG_KEY,
@@ -54,7 +54,7 @@ class AsyncValidationModelMetaclass(ModelMetaclass):
             ):
                 async_field_validators.append(attr_value)
 
-            # Register all root validators
+            # Register all model validators
             async_model_validator_config = getattr(
                 attr_value,
                 ASYNC_MODEL_VALIDATOR_CONFIG_KEY,

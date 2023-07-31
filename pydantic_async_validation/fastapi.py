@@ -4,15 +4,16 @@ from typing import Any, Type, Union
 from fastapi.exceptions import RequestValidationError
 from pydantic import ValidationError
 
-from pydantic_async_validation.exceptions import AsyncValidationError
-
 
 class ensure_request_validation_errors():
     """
-    Converter for ValidationErrors.
+    Converter for `ValidationError` to `RequestValidationError`.
 
-    This will convert any ValidationError's inside the called code
-    into RequestValidationErrors which will trigger HTTP 422 responses.
+    This will convert any ValidationError's inside the called code into
+    RequestValidationErrors which will trigger HTTP 422 responses in
+    FastAPI. This is useful for when you want to do extra validation in
+    your code that is not covered by FastAPI's normal request parameter
+    handling.
 
     Usage examples:
 
@@ -55,6 +56,4 @@ class ensure_request_validation_errors():
             return
 
         if isinstance(exc_value, ValidationError):
-            raise RequestValidationError(errors=exc_value.errors())
-        if isinstance(exc_value, AsyncValidationError):
             raise RequestValidationError(errors=exc_value.errors())
