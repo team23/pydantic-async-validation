@@ -17,11 +17,22 @@ class SomethingModel(AsyncValidationModelMixin, pydantic.BaseModel):
         if self.name == "invalid":
             raise ValueError("Invalid name")
 
+    @async_model_validator()
+    async def validate_age(self) -> None:
+        assert self.age > 0
+
 
 @pytest.mark.asyncio
 async def test_async_validation_raises_no_issues():
     instance = SomethingModel(name="valid", age=1)
     await instance.model_async_validate()
+
+
+@pytest.mark.asyncio
+async def test_async_validation_raises_when_validation_fails():
+    instance = SomethingModel(name="invalid", age=1)
+    with pytest.raises(pydantic.ValidationError):
+        await instance.model_async_validate()
 
 
 @pytest.mark.asyncio
