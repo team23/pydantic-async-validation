@@ -7,6 +7,10 @@ Note that validation cannot happen during model creation, so you have to call `a
 yourself. This is due to the fact that `__init__()` will always be a sync method and you cannot sanely call async
 methods from sync methods.
 
+**Note:** `pydantic-async-validation` is compatible with `pydantic` versions `2.x` only. It supports
+Python `3.8`, `3.9`, `3.10` and `3.11`. This is also ensured running all tests on all those versions
+using `tox`.
+
 ## Example usage
 
 ```python
