@@ -185,6 +185,9 @@ async def return_http_422_on_async_validation_error():
 You may also use `ensure_request_validation_errors` to do additional validation on the request data using normal
 pydantic validation and converting those `ValidationError`s to `RequestValidationError`s. 😉
 
+**Note:** When using FastAPI you should install `pydantic-async-validation` using
+`pip install pydantic-async-validation[fastapi]` to ensure FastAPI is installed in a compatible version.
+
 # Contributing
 
 If you want to contribute to this project, feel free to just fork the project,
