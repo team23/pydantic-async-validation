@@ -3,7 +3,7 @@
 Add async validation to your pydantic models 🥳. This allows you to add validation that actually checks the database
 or makes an API call or just use any code you did write async.
 
-Note that validation cannot happen during model creation, so you have to call `await model.model_async_validate()`
+Note that validation cannot happen during model creation, so you have to call `await obj.model_async_validate()`
 yourself. This is due to the fact that `__init__()` will always be a sync method and you cannot sanely call async
 methods from sync methods.
 
@@ -95,7 +95,7 @@ class SomethingModel(AsyncValidationModelMixin, pydantic.BaseModel):
 
 ## When to use field vs. model validators
 
-As validation happens after the model instance was created, you can access all fields  just using `self` anyways. So
+As validation happens after the model instance was created, you can access all fields just using `self` anyways. So
 field vs. model validation is kind of the same thing. However field validators allow you to get the `value` of the
 field as its parameter, so this is perfect when you reuse validators or want to validate multiple fields with the same
 validator. Also field validators will tie the `ValidationError` to the field, so it will contain the detail about which
@@ -111,7 +111,7 @@ field to tie it to.
 ## Handling validation errors
 
 Like with normal pydantic validation, you can catch `ValidationError` and access the `errors()` method to get a list of
-all errors. Like pydantic errors will be collected and be raised as one `ValidationError` at the end of validation,
+all errors. Like with pydantic errors will be collected and be raised as one `ValidationError` at the end of validation,
 including all errors that occurred.
 
 `model_async_validate()` will also try to validate child model instances, that are also using the
@@ -139,27 +139,28 @@ invalid_instance = ParentModel(child=SomethingModel(name="invalid"))
 await invalid_instance.model_async_validate()  # will raise normal pydantic ValidationError
 ```
 
-Note the `ValidationError` will not have the location of the error set to `"child.name"`.
+Note the `ValidationError` will now have the location of the error set to `"child.name"`.
 
 Recursive validation will happen in those cases:
-* Child models as direct instance variables (see example above)
-* Child models in list items
-* Child models in dict values
+* Child models as direct instance variables (as in example above)
+* Child models in list items (like `child: List[SomethingModel]`)
+* Child models in dict values (like `child: Dict[str, SomethingModel]`)
 
 ## FastAPI support
 
 When using FastAPI you also can use the `AsyncValidationModelMixin`, note however that FastAPI will see any
 `ValidationError` risen in endpoint methods as unhandled exceptions and thus will return a HTTP 500 error. FastAPI
-will only handle the validation errors happening during handling the endpoint parameters in as special way and
+will only handle the validation errors happening during handling the endpoint parameters in a special way and
 convert those to `RequestValidationError` - which will then be handled by the default exception handler for
 `RequestValidationError` FastAPI provides. This will then result in a HTTP 422 return code.
 
 When using `pydantic_async_validation` this would be a major drawback, as using `model_async_validate` for
-validating input (/request) data is a totally fine use case. To solve this issue you can use the
-`ensure_request_validation_errors` context manager provided in `pydantic_async_validation.fastapi`. This will
-ensure that any `ValidationError` risen during the context manager will be converted to a `RequestValidationError`.
-Those `RequestValidationError`s will then be handled by the default exception handler for `RequestValidationError`
-FastAPI provides. This will then again result in a HTTP 422 return code.
+validating input (/request) data is a totally fine use case and you cannot push this into the normal request
+validation step FastAPI does. To solve this issue you can use the `ensure_request_validation_errors` context manager
+provided in `pydantic_async_validation.fastapi`. This will ensure that any `ValidationError` risen inside the context
+manager will be converted to a `RequestValidationError`. Those `RequestValidationError`s will then be handled by
+the default exception handler for `RequestValidationError` which FastAPI provides. This will then again result in a
+HTTP 422 return code.
 
 Example for usage with FastAPI:
 
