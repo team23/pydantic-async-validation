@@ -49,7 +49,7 @@ def generic_field_validator_wrapper(
         args -= {'kwargs'}
 
     if not args.issubset(all_field_validator_kwargs):
-        raise PydanticUserError( # noqa
+        raise PydanticUserError(
             f'Invalid signature for validator {validator_func}: {sig}, '
             f'should be: '
             f'(self, value, field, config), '
@@ -62,31 +62,31 @@ def generic_field_validator_wrapper(
             self, value=value, field=field, config=config,
         )
     if args == set():
-        return lambda self, value, field, config: validator_func(
+        return lambda self, value, field, config: validator_func(  # noqa: ARG005
             self,
         )
     if args == {'value'}:
-        return lambda self, value, field, config: validator_func(
+        return lambda self, value, field, config: validator_func(  # noqa: ARG005
             self, value=value,
         )
     if args == {'field'}:
-        return lambda self, value, field, config: validator_func(
+        return lambda self, value, field, config: validator_func(  # noqa: ARG005
             self, field=field,
         )
     if args == {'value', 'field'}:
-        return lambda self, value, field, config: validator_func(
+        return lambda self, value, field, config: validator_func(  # noqa: ARG005
             self, value=value, field=field,
         )
     if args == {'config'}:
-        return lambda self, value, field, config: validator_func(
+        return lambda self, value, field, config: validator_func(  # noqa: ARG005
             self, config=config,
         )
     if args == {'value', 'config'}:
-        return lambda self, value, field, config: validator_func(
+        return lambda self, value, field, config: validator_func(  # noqa: ARG005
             self, value=value, config=config,
         )
     if args == {'field', 'config'}:
-        return lambda self, value, field, config: validator_func(
+        return lambda self, value, field, config: validator_func(  # noqa: ARG005
             self, field=field, config=config,
         )
 
@@ -139,7 +139,7 @@ def generic_model_validator_wrapper(
         args -= {'kwargs'}
 
     if not args.issubset(all_model_validator_kwargs):
-        raise PydanticUserError( # noqa
+        raise PydanticUserError(
             f'Invalid signature for validator {validator_func}: {sig}, '
             f'should be: '
             f'(self, config), '
@@ -152,7 +152,7 @@ def generic_model_validator_wrapper(
             self, config=config,
         )
     if args == set():
-        return lambda self, config: validator_func(
+        return lambda self, config: validator_func(  # noqa: ARG005
             self,
         )
 

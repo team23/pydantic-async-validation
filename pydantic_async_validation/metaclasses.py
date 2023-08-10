@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, Any, List, Optional, Tuple
 
-from pydantic._internal._model_construction import ModelMetaclass  # noqa
+from pydantic._internal._model_construction import ModelMetaclass
 
 from pydantic_async_validation.constants import (
     ASYNC_FIELD_VALIDATOR_CONFIG_KEY,

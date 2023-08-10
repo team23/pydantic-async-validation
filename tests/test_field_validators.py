@@ -25,27 +25,27 @@ class SomethingModel(AsyncValidationModelMixin, pydantic.BaseModel):
         assert value > 0
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_async_validation_raises_no_issues():
     instance = SomethingModel(name="valid", age=1)
     await instance.model_async_validate()
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_async_validation_raises_when_validation_fails():
     instance = SomethingModel(name="invalid", age=1)
     with pytest.raises(pydantic.ValidationError):
         await instance.model_async_validate()
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_async_validation_raises_when_validation_fails_by_assertion():
     instance = SomethingModel(name="valid", age=0)
     with pytest.raises(pydantic.ValidationError):
         await instance.model_async_validate()
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_all_field_validator_combinations_are_valid():
     class OtherModel(AsyncValidationModelMixin, pydantic.BaseModel):
         name: str
@@ -81,7 +81,7 @@ async def test_all_field_validator_combinations_are_valid():
     await instance.model_async_validate()
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_invalid_validators_are_prohibited():
     with pytest.raises(PydanticUserError):
         class OtherModel1(AsyncValidationModelMixin, pydantic.BaseModel):
@@ -91,28 +91,28 @@ async def test_invalid_validators_are_prohibited():
             async def validate_name(self, no_value: Any) -> None: pass
 
     with pytest.raises(PydanticUserError):
-        class OtherModel1(AsyncValidationModelMixin, pydantic.BaseModel):
+        class OtherModel2(AsyncValidationModelMixin, pydantic.BaseModel):
             name: str
 
             @async_field_validator('name')
             async def validate_name(self, no_value: Any) -> None: pass
 
     with pytest.raises(PydanticUserError):
-        class OtherModel2(AsyncValidationModelMixin, pydantic.BaseModel):
+        class OtherModel3(AsyncValidationModelMixin, pydantic.BaseModel):
             name: str
 
             @async_field_validator('name')
             async def validate_name(self, value: str, something_else: Any) -> None: pass
 
     with pytest.raises(PydanticUserError):
-        class OtherModel3(AsyncValidationModelMixin, pydantic.BaseModel):
+        class OtherModel4(AsyncValidationModelMixin, pydantic.BaseModel):
             name: str
 
             @async_field_validator('name')
             async def validate_name(cls, value: str) -> None: pass
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_async_validation_may_get_extra_details():
     class OtherModel(AsyncValidationModelMixin, pydantic.BaseModel):
         name: str
@@ -125,7 +125,7 @@ async def test_async_validation_may_get_extra_details():
     await instance.model_async_validate()
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_async_validation_will_call_sub_model_validation():
     class OtherModel(AsyncValidationModelMixin, pydantic.BaseModel):
         something: SomethingModel

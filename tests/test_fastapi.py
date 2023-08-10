@@ -21,7 +21,7 @@ class SomethingModel(AsyncValidationModelMixin, pydantic.BaseModel):
             raise ValueError("Invalid name")
 
 
-@pytest.fixture
+@pytest.fixture()
 def app():
     app = fastapi.FastAPI()
 

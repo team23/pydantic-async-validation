@@ -28,4 +28,4 @@ def ensure_request_validation_errors() -> Generator[None, None, None]:
     try:
         yield
     except ValidationError as O_o:
-        raise RequestValidationError(errors=O_o.errors())
+        raise RequestValidationError(errors=O_o.errors()) from O_o

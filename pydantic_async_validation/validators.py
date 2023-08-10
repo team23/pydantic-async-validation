@@ -9,8 +9,8 @@ from pydantic_async_validation.utils import make_generic_field_validator, make_g
 if TYPE_CHECKING:  # pragma: no cover
     from inspect import Signature  # noqa
 
-    from pydantic.main import BaseConfig  # noqa
-    from pydantic.types import ModelOrDc  # noqa
+    from pydantic.main import BaseConfig
+    from pydantic.types import ModelOrDc
 
     ValidatorCallable = Callable[
         [

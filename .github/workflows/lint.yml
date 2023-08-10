@@ -13,7 +13,7 @@ jobs:
         run: |
           python -m pip install --upgrade poetry
           poetry install -E fastapi
-      - name: Lint with flake8
+      - name: Lint with ruff & mypy
         run: |
-          poetry run flake8 pydantic_async_validation tests
+          poetry run ruff check pydantic_async_validation tests
           poetry run mypy pydantic_async_validation
