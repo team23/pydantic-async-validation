@@ -19,9 +19,9 @@ _install-pre-commit:
     #!powershell.exe
     Write-Host "Please ensure pre-commit hooks are installed using 'pre-commit install --install-hooks'"
 
-install: (poetry "install") && _install-pre-commit
+install: (poetry "install" "-E" "fastapi") && _install-pre-commit
 
-update: (poetry "install")
+update: (poetry "install" "-E" "fastapi")
 
 poetry *args:
     poetry {{args}}
