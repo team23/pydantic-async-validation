@@ -32,7 +32,7 @@ test-all: (poetry "run" "tox")
 
 ruff *args: (poetry "run" "ruff" "check" "pydantic_async_validation" "tests" args)
 
-mypy *args:  (poetry "run" "mypy" "pydantic_async_validation" args)
+mypy *args: (poetry "run" "mypy" "pydantic_async_validation" args)
 
 lint: ruff mypy
 
