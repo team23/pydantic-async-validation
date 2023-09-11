@@ -22,7 +22,7 @@ pytest-cov = ">=3,<5"
 pytest-asyncio = "^0.21.1"
 mypy = ">=0.971,<2.0"
 tox = ">=3.26,<5.0"
-httpx = "^0.24.1"
+httpx = ">=0.24.1,<0.26.0"
 ruff = ">=0.0.284,<0.1.0"
 
 [tool.ruff]
