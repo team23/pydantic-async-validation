@@ -182,8 +182,8 @@ def prefix_errors(
                 **error,
                 'type': (
                     PydanticCustomError(
-                        error['type'],
-                        cast(ErrorDetails, error)['msg'],
+                        error['type'],  # type: ignore
+                        cast(ErrorDetails, error)['msg'],  # type: ignore
                     )
                     if isinstance(error['type'], str)
                     else error['type']
@@ -197,7 +197,7 @@ def prefix_errors(
             {
                 # Original data is InitErrorDetails, all fine
                 **error,
-                'loc': (*prefix, *error['loc']),
+                'loc': (*prefix, *error.get('loc', [])),
             },
         )
         for error
