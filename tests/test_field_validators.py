@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Set, Tuple
 
 import pydantic
 import pytest
@@ -129,20 +129,23 @@ async def test_async_validation_may_get_extra_details():
 async def test_async_validation_will_call_sub_model_validation():
     class OtherModel(AsyncValidationModelMixin, pydantic.BaseModel):
         something: SomethingModel
-        somethings: List[SomethingModel]
+        something_list: List[SomethingModel]
+        something_tuple: Tuple[SomethingModel]
         somethings_by_name: Dict[str, SomethingModel]
 
     instance = OtherModel(
         something=SomethingModel(name="invalid", age=1),
-        somethings=[SomethingModel(name="invalid", age=1)],
+        something_list=[SomethingModel(name="invalid", age=1)],
+        something_tuple=(SomethingModel(name="invalid", age=1),),
         somethings_by_name={"some": SomethingModel(name="invalid", age=1)},
     )
     with pytest.raises(pydantic.ValidationError) as O_o:
         await instance.model_async_validate()
 
-    assert len(O_o.value.errors()) == 3
+    assert len(O_o.value.errors()) == 4
     assert {e['loc'] for e in O_o.value.errors()} == {
         ('something', 'name'),
-        ('somethings', 0, 'name'),
+        ('something_list', 0, 'name'),
+        ('something_tuple', 0, 'name'),
         ('somethings_by_name', 'some', 'name'),
     }

@@ -103,7 +103,7 @@ class AsyncValidationModelMixin(
                     attribute_value,
                 )
             # List of child instances
-            if isinstance(attribute_value, list):
+            if isinstance(attribute_value, (list, set, tuple)):
                 for index, item in enumerate(attribute_value):
                     if isinstance(item, AsyncValidationModelMixin):
                         await extend_with_validation_errors_by(
