@@ -90,7 +90,7 @@ def generic_field_validator_wrapper(
             self, field=field, config=config,
         )
 
-    # args == {'value', 'field', 'validator'}
+    # args == {'value', 'field', 'config'}
     return lambda self, value, field, config: validator_func(
         self, value=value, field=field, config=config,
     )
