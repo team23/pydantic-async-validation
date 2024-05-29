@@ -179,12 +179,13 @@ app = fastapi.FastAPI()
 @app.get("/return-http-422-on-async-validation-error")
 async def return_http_422_on_async_validation_error():
     instance = SomethingModel(...)
-    with ensure_request_validation_errors():
+    with ensure_request_validation_errors("body"):  # use body as error location prefix
         await instance.model_async_validate()
 ```
 
 You may also use `ensure_request_validation_errors` to do additional validation on the request data using normal
-pydantic validation and converting those `ValidationError`s to `RequestValidationError`s. 😉
+pydantic validation and converting those `ValidationError`s to `RequestValidationError`s. Use the `prefix`
+parameter to mimic the FastAPI behaviour regarding using "body" for POST body data for example. 😉
 
 **Note:** When using FastAPI you should install `pydantic-async-validation` using
 `pip install pydantic-async-validation[fastapi]` to ensure FastAPI is installed in a compatible version.
