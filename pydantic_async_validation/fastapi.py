@@ -1,12 +1,32 @@
 from contextlib import contextmanager
-from typing import Generator
+from typing import Generator, List, Optional, Tuple, Union
 
 from fastapi.exceptions import RequestValidationError
 from pydantic import ValidationError
+from pydantic_core import ErrorDetails
+
+
+def _prefix_request_errors(
+    prefix: Tuple[Union[int, str], ...],
+    errors: List[ErrorDetails],
+) -> List[ErrorDetails]:
+    """Add prefix to errors in preparation for request validation error conversion."""
+
+    return [
+        {
+            **error,
+            # Just add prefix
+            'loc': (*prefix, *error.get('loc', [])),
+        }
+        for error
+        in errors
+    ]
 
 
 @contextmanager
-def ensure_request_validation_errors() -> Generator[None, None, None]:
+def ensure_request_validation_errors(
+    prefix: Optional[Union[Tuple[Union[int, str], ...], str]] = None,
+) -> Generator[None, None, None]:
     """
     Converter for `ValidationError` to `RequestValidationError`.
 
@@ -28,4 +48,14 @@ def ensure_request_validation_errors() -> Generator[None, None, None]:
     try:
         yield
     except ValidationError as O_o:
-        raise RequestValidationError(errors=O_o.errors()) from O_o
+        prepared_errors = O_o.errors(include_url=False)
+
+        if prefix is None:
+            raise RequestValidationError(errors=prepared_errors) from O_o
+
+        if isinstance(prefix, str):
+            prefix = (prefix,)
+
+        raise RequestValidationError(
+            errors=_prefix_request_errors(prefix, prepared_errors),
+        ) from O_o
