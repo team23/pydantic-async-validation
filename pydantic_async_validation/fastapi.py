@@ -1,14 +1,15 @@
 from contextlib import contextmanager
-from typing import Dict, Generator, List, Optional, Tuple, Union
+from typing import Generator, List, Optional, Tuple, Union
 
 from fastapi.exceptions import RequestValidationError
 from pydantic import ValidationError
+from pydantic_core import ErrorDetails
 
 
 def _prefix_request_errors(
-    prefix: Tuple[str, ...],
-    errors: List[Dict],
-) -> List[Dict]:
+    prefix: Tuple[Union[int, str], ...],
+    errors: List[ErrorDetails],
+) -> List[ErrorDetails]:
     """Add prefix to errors in preparation for request validation error conversion."""
 
     return [
