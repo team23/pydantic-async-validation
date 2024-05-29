@@ -25,8 +25,8 @@ class AsyncValidationModelMetaclass(ModelMetaclass):
         async_model_validators: List[ValidationInfo] = []
 
         async_field_validator_fields: Optional[List[str]]
-        async_field_validator_config: "Optional[ValidationInfo]"
-        async_model_validator_config: "Optional[ValidationInfo]"
+        async_field_validator_config: Optional[ValidationInfo]
+        async_model_validator_config: Optional[ValidationInfo]
 
         for base in bases:
             async_field_validators += getattr(
