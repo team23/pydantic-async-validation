@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pydantic-async-validation"
-version = "0.1.4"
+version = "0.2.0"
 description = "Add async validation to pydantic"
 authors = ["TEAM23 GmbH <info@team23.de>"]
 license = "MIT"
