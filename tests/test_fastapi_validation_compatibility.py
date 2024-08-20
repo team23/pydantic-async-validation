@@ -39,7 +39,7 @@ class ParentModelUsingAsyncValidation(AsyncValidationModelMixin, pydantic.BaseMo
 
 
 @pytest.mark.skipif(fastapi is None, reason="fastapi not installed")
-@pytest.mark.asyncio()
+@pytest.mark.asyncio
 async def test_pydantic_validation_compatibility():
     pydantic_validation_error = {}
     try:
@@ -61,7 +61,7 @@ async def test_pydantic_validation_compatibility():
 
 
 @pytest.mark.skipif(fastapi is None, reason="fastapi not installed")
-@pytest.mark.asyncio()
+@pytest.mark.asyncio
 async def test_pydantic_child_validation_compatibility():
     pydantic_validation_error = {}
     try:
@@ -89,7 +89,7 @@ async def test_pydantic_child_validation_compatibility():
     assert pydantic_validation_error["type"] == async_validation_error["type"]
 
 
-@pytest.fixture()
+@pytest.fixture
 def app():
     app_ = fastapi.FastAPI()
 
@@ -113,7 +113,7 @@ def app():
 
 
 @pytest.mark.skipif(fastapi is None, reason="fastapi not installed")
-@pytest.mark.asyncio()
+@pytest.mark.asyncio
 async def test_fastapi_validation_compatibility(app):
     with TestClient(app) as client:
         response = client.post("/pydantic-test", json={"name": "invalid anyways"})
