@@ -94,8 +94,8 @@ async def test_async_validation_may_get_extra_details():
 async def test_async_validation_will_call_sub_model_validation():
     class OtherModel(AsyncValidationModelMixin, pydantic.BaseModel):
         something: SomethingModel
-        somethings: List[SomethingModel]
-        somethings_by_name: Dict[str, SomethingModel]
+        somethings: list[SomethingModel]
+        somethings_by_name: dict[str, SomethingModel]
 
     instance = OtherModel(
         something=SomethingModel(name="invalid", age=1),

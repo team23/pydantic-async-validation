@@ -1,5 +1,5 @@
 from types import FunctionType
-from typing import TYPE_CHECKING, Any, Callable, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Callable, Optional
 
 from pydantic.errors import PydanticUserError
 
@@ -64,7 +64,7 @@ def async_field_validator(
             code='validator-instance-method',
         )
 
-    field_names: Tuple[str, ...] = __field_name, *additional_field_names
+    field_names: tuple[str, ...] = __field_name, *additional_field_names
 
     def dec(func: Callable) -> Callable:
         setattr(
