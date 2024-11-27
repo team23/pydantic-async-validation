@@ -30,7 +30,7 @@ if TYPE_CHECKING:  # pragma: no cover
 class ValidationInfo:
     """Helper / data class to store validator information."""
 
-    __slots__ = ('func', 'extra')
+    __slots__ = ('extra', 'func')
 
     def __init__(
         self,
