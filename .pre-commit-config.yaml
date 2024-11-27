@@ -24,7 +24,7 @@ repos:
         additional_dependencies:
           - "@commitlint/config-conventional"
 default_stages:
-  - commit
+  - pre-commit
 default_install_hook_types:
   - pre-commit
   - commit-msg
