@@ -188,7 +188,7 @@ def prefix_errors(
                     if isinstance(error['type'], str)
                     else error['type']
                 ),
-                'loc': (*prefix, *error['loc']),
+                'loc': (*prefix, *error.get('loc', [])),
             },
         )
         if "msg" in error
