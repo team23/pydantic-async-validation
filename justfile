@@ -19,9 +19,9 @@ _install-pre-commit:
     #!powershell.exe
     Write-Host "Please ensure pre-commit hooks are installed using 'pre-commit install --install-hooks'"
 
-install: (uv "sync" "--group" "dev") && _install-pre-commit
+install: (uv "sync" "--group" "dev" "--all-extras") && _install-pre-commit
 
-update: (uv "sync" "--group" "dev")
+update: (uv "sync" "--group" "dev" "--all-extras")
 
 uv *args:
     uv {{args}}

@@ -8,7 +8,6 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "pydantic>=2.0.0,<3.0.0",
-    "pytest>=7.4,<9.0",
 ]
 
 [project.optional-dependencies]
@@ -19,13 +18,13 @@ Repository = "https://github.com/team23/pydantic-async-validation"
 
 [dependency-groups]
 dev = [
-    "pytest>=7.1.2,<9.0.0",
-    "pytest-cov>=3,<6",
-    "pytest-asyncio>=0.21.1,<0.25.0",
-    "tox>=3.26,<5.0",
-    "httpx>=0.24.1,<0.29.0",
-    "ruff>=0.5.0,<0.14.0",
-    "pyright>=1.1.350,<1.2",
+    "pytest>=8.4.2,<9.0.0",
+    "pytest-cov>=7.0.0,<8",
+    "pytest-asyncio>=0.24.0,<0.25.0",
+    "tox>=4.30.3,<5.0",
+    "httpx>=0.28.1,<0.29.0",
+    "ruff>=0.13.3,<0.14.0",
+    "pyright>=1.1.406,<1.2",
 ]
 
 [tool.ruff]
