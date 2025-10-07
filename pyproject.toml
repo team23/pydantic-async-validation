@@ -1,33 +1,36 @@
-[tool.poetry]
+[project]
 name = "pydantic-async-validation"
 version = "0.3.0"
 description = "Add async validation to pydantic"
-authors = ["TEAM23 GmbH <info@team23.de>"]
+authors = [{ name = "TEAM23 GmbH", email = "info@team23.de" }]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "pydantic_async_validation"}]
+requires-python = ">=3.10"
+dependencies = [
+    "pydantic>=2.0.0,<3.0.0",
+    "pytest>=7.4,<9.0",
+]
 
-[tool.poetry.dependencies]
-python = "^3.8"
-pydantic = ">=2.0.0,<3.0.0"
-fastapi = {version = ">=0.100.0,<1.0.0", optional = true}
-pytest = ">=7.4,<9.0"
+[project.optional-dependencies]
+fastapi = ["fastapi>=0.100.0,<1.0.0"]
 
-[tool.poetry.extras]
-fastapi = ["fastapi"]
+[project.urls]
+Repository = "https://github.com/team23/pydantic-async-validation"
 
-[tool.poetry.group.dev.dependencies]
-pytest = ">=7.1.2,<9.0.0"
-pytest-cov = ">=3,<6"
-pytest-asyncio = ">=0.21.1,<0.25.0"
-tox = ">=3.26,<5.0"
-httpx = ">=0.24.1,<0.29.0"
-ruff = ">=0.5.0,<0.14.0"
-pyright = ">=1.1.350,<1.2"
+[dependency-groups]
+dev = [
+    "pytest>=7.1.2,<9.0.0",
+    "pytest-cov>=3,<6",
+    "pytest-asyncio>=0.21.1,<0.25.0",
+    "tox>=3.26,<5.0",
+    "httpx>=0.24.1,<0.29.0",
+    "ruff>=0.5.0,<0.14.0",
+    "pyright>=1.1.350,<1.2",
+]
 
 [tool.ruff]
 line-length = 115
-target-version = "py39"
+target-version = "py310"
 output-format = "grouped"
 
 [tool.ruff.lint]
@@ -40,5 +43,9 @@ ignore = ["A001","A002","A003","ANN401","C901","N8","B008","F405","F821"]
 "test_*.py" = ["S101","ANN","F401"]
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["uv_build>=0.8.22,<0.9.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "pydantic_async_validation"
+module-root = ""

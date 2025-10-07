@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 from pydantic._internal._model_construction import ModelMetaclass
 
@@ -24,9 +24,9 @@ class AsyncValidationModelMetaclass(ModelMetaclass):
         async_field_validators: list[tuple[list[str], ValidationInfo]] = []
         async_model_validators: list[ValidationInfo] = []
 
-        async_field_validator_fields: Optional[list[str]]
-        async_field_validator_config: Optional[ValidationInfo]
-        async_model_validator_config: Optional[ValidationInfo]
+        async_field_validator_fields: list[str] | None
+        async_field_validator_config: ValidationInfo | None
+        async_model_validator_config: ValidationInfo | None
 
         for base in bases:
             async_field_validators += getattr(

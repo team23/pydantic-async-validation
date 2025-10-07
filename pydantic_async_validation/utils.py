@@ -1,6 +1,7 @@
+from collections.abc import Callable
 from functools import wraps
 from inspect import Signature, signature
-from typing import Callable, Union, cast
+from typing import cast
 
 from pydantic import PydanticUserError
 from pydantic_core import ErrorDetails, InitErrorDetails, PydanticCustomError
@@ -163,8 +164,8 @@ def generic_model_validator_wrapper(
 
 
 def prefix_errors(
-    prefix: tuple[Union[int, str], ...],
-    errors: Union[list[InitErrorDetails], list[ErrorDetails]],
+    prefix: tuple[int | str, ...],
+    errors: list[InitErrorDetails] | list[ErrorDetails],
 ) -> list[InitErrorDetails]:
     """
     Extend all errors passed as list to include an additional prefix.

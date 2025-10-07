@@ -1,5 +1,6 @@
+from collections.abc import Callable
 from types import FunctionType
-from typing import TYPE_CHECKING, Any, Callable, Optional
+from typing import TYPE_CHECKING, Any
 
 from pydantic.errors import PydanticUserError
 
@@ -14,7 +15,7 @@ if TYPE_CHECKING:  # pragma: no cover
 
     ValidatorCallable = Callable[
         [
-            Optional[ModelOrDc],
+            ModelOrDc | None,
             Any,
             dict[str, Any],
             str,
@@ -36,7 +37,7 @@ class ValidationInfo:
         self,
         func: Callable,
         *,
-        extra: Optional[dict[str, Any]] = None,
+        extra: dict[str, Any] | None = None,
 
     ) -> None:
         self.func = func

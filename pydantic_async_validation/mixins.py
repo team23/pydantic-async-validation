@@ -1,4 +1,4 @@
-from typing import ClassVar, Union
+from typing import ClassVar
 
 import pydantic
 from pydantic_core import InitErrorDetails, PydanticCustomError, ValidationError
@@ -82,7 +82,7 @@ class AsyncValidationModelMixin(
 
         # Also call async validation on attribute values
         async def extend_with_validation_errors_by(
-            prefix: tuple[Union[int, str], ...],
+            prefix: tuple[int | str, ...],
             instance: AsyncValidationModelMixin,
         ) -> None:
             try:

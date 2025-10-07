@@ -8,7 +8,7 @@ yourself. This is due to the fact that `__init__()` will always be a sync method
 methods from sync methods.
 
 **Note:** `pydantic-async-validation` is compatible with `pydantic` versions `2.x` only. It supports
-Python `3.8`, `3.9`, `3.10`, `3.11` and `3.12`. This is also ensured running all tests on all those versions
+Python `3.10`, `3.11`, `3.12` and `3.13`. This is also ensured running all tests on all those versions
 using `tox`.
 
 ## Example usage
